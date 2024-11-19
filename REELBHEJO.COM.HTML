@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REELS BHEJO.COM</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #4CAF50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        form {
+            background: white;
+            margin: 1rem auto;
+            padding: 1rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        input, button {
+            width: 100%;
+            margin: 0.5rem 0;
+            padding: 0.7rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .videos {
+            max-width: 800px;
+            margin: 1rem auto;
+            padding: 1rem;
+        }
+        .video-card {
+            background: white;
+            margin: 0.5rem 0;
+            padding: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .video-card h4 {
+            margin: 0.5rem 0;
+        }
+        .admin-tools {
+            margin-top: 1rem;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>REELS BHEJO.COM</h1>
+       <P> RULE-PLEASE BE RESPECTFUL</P> 
+		<p>Share videos with the world!</p>
+    </header>
+
+    <form id="videoForm">
+        <h2>Share a Video</h2>
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" placeholder="Enter your name" required />
+        <label for="url">Video URL:</label>
+        <input type="url" id="url" placeholder="Enter a valid video URL" required />
+        <button type="submit">Share Video</button>
+    </form>
+
+    <div class="videos" id="videoList">
+        <h2>Shared Videos</h2>
+        <!-- Videos will be dynamically added here -->
+    </div>
+
+    <script>
+        const videoForm = document.getElementById('videoForm');
+        const videoList = document.getElementById('videoList');
+        const blockedUsers = new Set(); // Keeps track of blocked users
+
+        let videos = []; // Array to store videos
+
+        videoForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value.trim();
+            const url = document.getElementById('url').value.trim();
+
+            if (blockedUsers.has(name.toLowerCase())) {
+                alert('You are blocked from sharing videos.');
+                return;
+            }
+
+            if (name && url) {
+                const video = { name, url };
+                videos.push(video);
+                displayVideos();
+                videoForm.reset();
+            }
+        });
+
+        function displayVideos() {
+            videoList.innerHTML = '<h2>Shared Videos</h2>';
+            videos.forEach((video, index) => {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                videoCard.innerHTML = `
+                    <h4>Video by: ${video.name}</h4>
+                    <a href="${video.url}" target="_blank">${video.url}</a>
+                    <div class="admin-tools">
+                        <button onclick="blockUser('${video.name}')">Block ${video.name}</button>
+                        <button onclick="deleteVideo(${index})">Delete Video</button>
+                    </div>
+                `;
+                videoList.appendChild(videoCard);
+            });
+        }
+
+        function blockUser(name) {
+            if (confirm(`Are you sure you want to block ${name}?`)) {
+                blockedUsers.add(name.toLowerCase());
+                alert(`${name} has been blocked.`);
+            }
+        }
+
+        function deleteVideo(index) {
+            videos.splice(index, 1);
+            displayVideos();
+        }
+    </script>
+</body>
+</html>
